@@ -11,7 +11,8 @@ class TestConstructor:
         "После добавления ингредиента в конструктор его счётчик на карточке увеличивается."
     )
     def test_ingredient_counter_increases_after_adding_to_constructor(self, driver):
-        main_page = MainPage(driver).open_page()
+        main_page = MainPage(driver)
+        main_page.open_page()
         counter_before = main_page.get_ingredient_counter(MainPage.DEFAULT_SAUCE)
 
         main_page.add_ingredient_to_constructor(MainPage.DEFAULT_SAUCE)

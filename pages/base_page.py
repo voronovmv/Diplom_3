@@ -3,31 +3,18 @@ from __future__ import annotations
 from typing import Tuple
 
 from selenium.common.exceptions import ElementClickInterceptedException, TimeoutException
-from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from config import BASE_URL, WAIT_TIMEOUT
+from locators.base_page_locators import BasePageLocators
 
 
 Locator = Tuple[str, str]
 
 
 class BasePage:
-    CONSTRUCTOR_LINK = (
-        By.XPATH,
-        "//a[@href='/' and .//*[normalize-space()='Конструктор']]",
-    )
-    ORDER_FEED_LINK = (
-        By.XPATH,
-        "//a[contains(@href, '/feed') and .//*[contains(normalize-space(), 'Лента')]]",
-    )
-    MODAL_OVERLAY = (
-        By.XPATH,
-        "//div[contains(@class, 'Modal_modal_overlay')]",
-    )
-
     def __init__(self, driver: WebDriver) -> None:
         self.driver = driver
         self.wait = WebDriverWait(driver, WAIT_TIMEOUT)
@@ -64,21 +51,11 @@ class BasePage:
     def wait_until_url_contains(self, url_part: str) -> bool:
         return self.wait.until(EC.url_contains(url_part))
 
-    def click_constructor(self):
-        from pages.main_page import MainPage
+    def click_constructor_link(self) -> None:
+        self.click(BasePageLocators.CONSTRUCTOR_LINK)
 
-        self.click(self.CONSTRUCTOR_LINK)
-        page = MainPage(self.driver)
-        page.wait_until_loaded()
-        return page
-
-    def click_order_feed(self):
-        from pages.order_feed_page import OrderFeedPage
-
-        self.click(self.ORDER_FEED_LINK)
-        page = OrderFeedPage(self.driver)
-        page.wait_until_loaded()
-        return page
+    def click_order_feed_link(self) -> None:
+        self.click(BasePageLocators.ORDER_FEED_LINK)
 
     def scroll_to(self, locator: Locator) -> None:
         element = self.wait.until(EC.presence_of_element_located(locator))
@@ -86,6 +63,12 @@ class BasePage:
             "arguments[0].scrollIntoView({block: 'center'});",
             element,
         )
+
+    def find_elements(self, locator: Locator):
+        return self.driver.find_elements(*locator)
+
+    def current_url(self) -> str:
+        return self.driver.current_url
 
     def is_visible(self, locator: Locator) -> bool:
         try:
@@ -95,7 +78,9 @@ class BasePage:
 
     def wait_for_overlays_to_disappear(self) -> None:
         try:
-            self.wait.until(EC.invisibility_of_element_located(self.MODAL_OVERLAY))
+            self.wait.until(
+                EC.invisibility_of_element_located(BasePageLocators.MODAL_OVERLAY)
+            )
         except TimeoutException:
             pass
 
