@@ -18,8 +18,7 @@ class TestNavigation:
         order_feed_page.click_constructor_link()
         main_page.wait_until_loaded()
 
-        assert main_page.current_url().startswith(BASE_URL)
-        assert "/feed" not in main_page.current_url()
+        assert main_page.current_url().rstrip("/") == BASE_URL.rstrip("/")
 
     @allure.title("Переход по клику на раздел «Лента заказов»")
     @allure.description("Пользователь может открыть ленту заказов с главной страницы.")
@@ -31,4 +30,4 @@ class TestNavigation:
         main_page.click_order_feed_link()
         order_feed_page.wait_until_loaded()
 
-        assert "/feed" in order_feed_page.current_url()
+        assert order_feed_page.current_url().rstrip("/").endswith("/feed")

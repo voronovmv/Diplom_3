@@ -16,6 +16,10 @@ class IngredientDetailsModal(BasePage):
     def get_ingredient_name(self) -> str:
         return self.get_text(IngredientDetailsModalLocators.INGREDIENT_NAME)
 
+    @allure.step("Проверить, что модальное окно ингредиента открыто")
+    def is_opened(self) -> bool:
+        return self.is_visible(IngredientDetailsModalLocators.MODAL_TITLE)
+
     @allure.step("Закрыть модальное окно ингредиента")
     def close(self) -> None:
         self.click(IngredientDetailsModalLocators.CLOSE_BUTTON)

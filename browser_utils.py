@@ -5,11 +5,12 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.remote.webdriver import WebDriver
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 
 
-def create_driver(browser_name: str, headless: bool = False):
+def create_driver(browser_name: str, headless: bool = False) -> WebDriver:
     if browser_name == "chrome":
         options = ChromeOptions()
         options.add_argument("--window-size=1920,1080")
@@ -27,10 +28,10 @@ def create_driver(browser_name: str, headless: bool = False):
         driver.set_window_size(1920, 1080)
         return driver
 
-    raise ValueError(f"Неизвестный браузер: {browser_name}")
+    raise ValueError(f"Unknown browser: {browser_name}")
 
 
-def attach_screenshot(driver, name: str = "screenshot") -> None:
+def attach_screenshot(driver: WebDriver, name: str = "screenshot") -> None:
     allure.attach(
         driver.get_screenshot_as_png(),
         name=name,
@@ -38,7 +39,7 @@ def attach_screenshot(driver, name: str = "screenshot") -> None:
     )
 
 
-def attach_page_source(driver, name: str = "page_source") -> None:
+def attach_page_source(driver: WebDriver, name: str = "page_source") -> None:
     allure.attach(
         driver.page_source,
         name=name,
@@ -46,7 +47,7 @@ def attach_page_source(driver, name: str = "page_source") -> None:
     )
 
 
-def _create_chrome_driver(options: ChromeOptions):
+def _create_chrome_driver(options: ChromeOptions) -> WebDriver:
     try:
         return webdriver.Chrome(options=options)
     except WebDriverException:
@@ -56,7 +57,7 @@ def _create_chrome_driver(options: ChromeOptions):
         )
 
 
-def _create_firefox_driver(options: FirefoxOptions):
+def _create_firefox_driver(options: FirefoxOptions) -> WebDriver:
     try:
         return webdriver.Firefox(options=options)
     except WebDriverException:

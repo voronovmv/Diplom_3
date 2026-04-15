@@ -1,5 +1,6 @@
 import allure
 
+from data.ingredient_names import DEFAULT_SAUCE_NAME
 from pages.main_page import MainPage
 
 
@@ -13,11 +14,11 @@ class TestConstructor:
     def test_ingredient_counter_increases_after_adding_to_constructor(self, driver):
         main_page = MainPage(driver)
         main_page.open_page()
-        counter_before = main_page.get_ingredient_counter(MainPage.DEFAULT_SAUCE)
+        counter_before = main_page.get_ingredient_counter(DEFAULT_SAUCE_NAME)
 
-        main_page.add_ingredient_to_constructor(MainPage.DEFAULT_SAUCE)
+        main_page.add_ingredient_to_constructor(DEFAULT_SAUCE_NAME)
         counter_after = main_page.wait_for_counter_growth(
-            MainPage.DEFAULT_SAUCE,
+            DEFAULT_SAUCE_NAME,
             counter_before,
         )
 

@@ -1,6 +1,6 @@
 import allure
 
-from locators.modals_locators import IngredientDetailsModalLocators
+from data.ingredient_names import DEFAULT_SAUCE_NAME
 from pages.main_page import MainPage
 from pages.modals import IngredientDetailsModal
 
@@ -17,11 +17,10 @@ class TestIngredientModal:
         modal = IngredientDetailsModal(driver)
 
         main_page.open_page()
-        main_page.open_ingredient_details(MainPage.DEFAULT_SAUCE)
+        main_page.open_ingredient_details(DEFAULT_SAUCE_NAME)
         modal.wait_until_opened()
 
-        assert modal.is_visible(IngredientDetailsModalLocators.MODAL_TITLE)
-        assert modal.get_ingredient_name() == MainPage.DEFAULT_SAUCE
+        assert modal.get_ingredient_name() == DEFAULT_SAUCE_NAME
 
     @allure.title("Всплывающее окно закрывается кликом по крестику")
     @allure.description("После клика по крестику модальное окно ингредиента скрывается.")
@@ -30,8 +29,8 @@ class TestIngredientModal:
         modal = IngredientDetailsModal(driver)
 
         main_page.open_page()
-        main_page.open_ingredient_details(MainPage.DEFAULT_SAUCE)
+        main_page.open_ingredient_details(DEFAULT_SAUCE_NAME)
         modal.wait_until_opened()
         modal.close()
 
-        assert not modal.is_visible(IngredientDetailsModalLocators.MODAL_TITLE)
+        assert not modal.is_opened()

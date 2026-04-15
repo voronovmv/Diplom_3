@@ -1,5 +1,6 @@
 import allure
 
+from data.ingredient_names import DEFAULT_BUN_NAME, DEFAULT_FILLING_NAME
 from pages.login_page import LoginPage
 from pages.main_page import MainPage
 from pages.modals import OrderDetailsModal
@@ -29,7 +30,8 @@ class TestOrderFeed:
 
         order_feed_page.click_constructor_link()
         main_page.wait_until_loaded()
-        main_page.add_default_order_ingredients()
+        main_page.add_ingredient_to_constructor(DEFAULT_BUN_NAME)
+        main_page.add_ingredient_to_constructor(DEFAULT_FILLING_NAME)
         main_page.click_place_order()
         order_details_modal.wait_until_opened()
         order_details_modal.close()
@@ -59,7 +61,8 @@ class TestOrderFeed:
 
         order_feed_page.click_constructor_link()
         main_page.wait_until_loaded()
-        main_page.add_default_order_ingredients()
+        main_page.add_ingredient_to_constructor(DEFAULT_BUN_NAME)
+        main_page.add_ingredient_to_constructor(DEFAULT_FILLING_NAME)
         main_page.click_place_order()
         order_details_modal.wait_until_opened()
         order_details_modal.close()
@@ -87,7 +90,8 @@ class TestOrderFeed:
 
         order_feed_page.click_constructor_link()
         main_page.wait_until_loaded()
-        main_page.add_default_order_ingredients()
+        main_page.add_ingredient_to_constructor(DEFAULT_BUN_NAME)
+        main_page.add_ingredient_to_constructor(DEFAULT_FILLING_NAME)
         main_page.click_place_order()
         order_details_modal.wait_until_opened()
         order_number = order_details_modal.get_order_number()

@@ -2,7 +2,7 @@ import allure
 import pytest
 
 from browser_utils import attach_page_source, attach_screenshot, create_driver
-from user_api import delete_user, generate_user_data, register_user
+from user_api import delete_user, extract_access_token, generate_user_data, register_user
 
 
 def pytest_addoption(parser):
@@ -42,9 +42,29 @@ def driver(browser_name, request):
 @pytest.fixture
 def registered_user():
     user = generate_user_data()
-    access_token = register_user(user)
+    registration_response = register_user(user)
+    if registration_response.status_code != 200:
+        raise RuntimeError(
+            "Не удалось создать пользователя для теста. "
+            f"Status code: {registration_response.status_code}, "
+            f"body: {registration_response.text}"
+        )
+
+    access_token = extract_access_token(registration_response)
+    if not access_token:
+        raise RuntimeError(
+            "Не удалось получить access token зарегистрированного пользователя. "
+            f"Response body: {registration_response.text}"
+        )
+
     yield user
-    delete_user(access_token)
+
+    delete_response = delete_user(access_token)
+    if delete_response and delete_response.status_code not in (200, 202):
+        raise RuntimeError(
+            "Не удалось удалить тестового пользователя. "
+            f"Status code: {delete_response.status_code}, body: {delete_response.text}"
+        )
 
 
 @pytest.hookimpl(hookwrapper=True)

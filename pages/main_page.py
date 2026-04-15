@@ -5,10 +5,6 @@ from pages.base_page import BasePage
 
 
 class MainPage(BasePage):
-    DEFAULT_BUN = "Флюоресцентная булка R2-D3"
-    DEFAULT_SAUCE = "Соус Spicy-X"
-    DEFAULT_FILLING = "Хрустящие минеральные кольца"
-
     @allure.step("Открыть главную страницу")
     def open_page(self) -> None:
         self.open()
@@ -37,11 +33,6 @@ class MainPage(BasePage):
     def click_place_order(self) -> None:
         self.click(MainPageLocators.PLACE_ORDER_BUTTON)
 
-    @allure.step("Добавить базовые ингредиенты для оформления заказа")
-    def add_default_order_ingredients(self) -> None:
-        self.add_ingredient_to_constructor(self.DEFAULT_BUN)
-        self.add_ingredient_to_constructor(self.DEFAULT_FILLING)
-
     @allure.step("Получить значение счётчика ингредиента «{ingredient_name}»")
     def get_ingredient_counter(self, ingredient_name: str) -> int:
         locator = MainPageLocators.ingredient_counter(
@@ -50,6 +41,7 @@ class MainPage(BasePage):
         elements = self.find_elements(locator)
         if not elements:
             return 0
+
         raw_value = elements[0].text.strip()
         return int(raw_value) if raw_value else 0
 
